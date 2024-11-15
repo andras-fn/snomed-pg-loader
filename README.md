@@ -1,19 +1,32 @@
-## loads some of the trud dataset into a postgres database
- - download the dataset from nhs trud
- - unzip
- - fill in the db connection details
- - call it like:
-    - node loadSnomed.js "C:\\path\\to\\folder\\containing\\unzipped\\dataset\\uk_sct2mo_39.1.0_20241023000001Z\\SnomedCT_MonolithRF2_PRODUCTION_20241023T120000Z"
+## Load the TRUD Dataset into a PostgreSQL Database
 
-you can then query it like in the following examples:
+### Steps to Load the Dataset
 
-search using an icd10 code:
-```bash
+1. **Download the Dataset**
+   - Obtain the dataset from the NHS TRUD website.
+
+2. **Unzip the Dataset**
+   - Extract the contents of the downloaded zip file.
+
+3. **Configure Database Connection**
+   - Fill in the database connection details in your configuration file or script.
+
+4. **Run the Loader Script**
+   - Execute the loader script with the path to the unzipped dataset:
+     ```bash
+     node loadSnomed.js "C:\\path\\to\\folder\\containing\\unzipped\\dataset\\uk_sct2mo_39.1.0_20241023000001Z\\SnomedCT_MonolithRF2_PRODUCTION_20241023T120000Z"
+     ```
+
+### Query Examples
+
+#### Search Using an ICD-10 Code
+
+```sql
 -- Step 1: Search for SNOMED concepts based on the ICD-10 code
 WITH ConceptMatches AS (
   SELECT referencedComponentId AS conceptId
   FROM extended_map
-  WHERE mapTarget = 'O103' -- Replace 'ICD10_CODE' with the actual ICD-10 code you are searching for
+  WHERE mapTarget = 'O103' -- Replace 'O103' with the actual ICD-10 code you are searching for
     AND active = true
 )
 
@@ -24,11 +37,10 @@ JOIN descriptions td ON cm.conceptId = td.conceptId
 WHERE td.active = true
   AND td.languageCode = 'en' -- Assuming we are looking for English descriptions
   AND td.typeId = '900000000000003001'; -- Assuming this is the typeId for preferred terms
-
 ```
 
-search based on a snomed description:
-```bash
+#### Search Based on a SNOMED Description
+```sql
 -- Step 1: Search for a SNOMED description and identify the concept
 WITH ConceptMatches AS (
   SELECT conceptId
@@ -45,4 +57,4 @@ JOIN extended_map em ON cm.conceptId = em.referencedComponentId
 WHERE td.active = true
   AND td.languageCode = 'en' -- Assuming we are looking for English descriptions
   AND em.active = true; -- Only include active mappings
-```
+  ```
