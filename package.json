@@ -2,6 +2,7 @@
   "name": "snomed-pg",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,7 +11,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@huggingface/transformers": "^3.0.2",
+    "@libsql/client": "^0.14.0",
     "csv-parser": "^3.0.0",
+    "csv-writer": "^1.6.0",
     "pg": "^8.13.1"
   }
 }

@@ -38,3 +38,6 @@ next-env.d.ts
 
 # plans
 plans
+
+*.db
+*.db-journal
